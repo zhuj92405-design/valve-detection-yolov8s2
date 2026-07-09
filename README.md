@@ -2,7 +2,7 @@
 
 Production-grade object detection model for underground gas valve well inspection.
 
-**Model Performance**: mAP50 = 90.6% | mAP50-95 = 81.4% | 4 valve classes
+**Model Performance**: mAP50 = 92.5% | mAP50-95 = 81.4% | 4 valve classes
 
 ## Quick Start
 
@@ -88,7 +88,7 @@ This model was trained using an **iterative pseudo-labeling** pipeline:
 | R7 | 3,937 | YOLOv8s | 80.5% | 63.6% |
 | R8 | 8,506 | YOLOv8s | 83.7% | 68.9% |
 | R9 | 18,608 | YOLOv8s | 81.3% | 65.0% |
-| **R10** | **9,038** | **YOLOv8s** | **90.6%** | **81.4%** |
+| **R10** | **9,038** | **YOLOv8s** | **92.5%** | **81.4%** |
 
 Key finding: Removing 50% of noisy pseudo-labels (filtering from 18K to 9K images) improved mAP50 by 6.9%.
 
