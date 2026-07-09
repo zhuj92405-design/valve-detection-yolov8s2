@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValveAI — AI-Powered Gas Valve Detection</title>
+    <meta name="description" content="Production-grade YOLOv8s valve detection model with 92.45% mAP50. Detect 4 valve types in underground gas infrastructure inspection photos.">
+    <meta name="keywords" content="AI, valve detection, YOLOv8, industrial inspection, computer vision, gas infrastructure">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0044cc;
+            --accent: #00d4ff;
+            --bg-dark: #0a0e1a;
+            --bg-card: #111827;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1a3e 50%, #0a0e1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 102, 255, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            position: relative;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto 32px;
+        }
+        .hero .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            position: relative;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,102,255,0.4); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+        .btn-secondary:hover { background: rgba(0,212,255,0.1); transform: translateY(-2px); }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            padding: 48px 0;
+            position: relative;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+        
+        /* Demo Section */
+        .demo-section {
+            padding: 60px 0;
+        }
+        .demo-section h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+        .demo-image {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.08);
+            background: #000;
+        }
+        .demo-image img {
+            width: 100%;
+            display: block;
+        }
+        .demo-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .feature-card {
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            gap: 16px;
+            align-items: start;
+        }
+        .feature-icon {
+            font-size: 1.5rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,102,255,0.15);
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        .feature-title { font-weight: 700; margin-bottom: 4px; }
+        .feature-desc { color: var(--text-muted); font-size: 0.9rem; }
+        
+        /* Training Section */
+        .training-section {
+            padding: 60px 0;
+        }
+        .training-section h2 { font-size: 2rem; text-align: center; margin-bottom: 16px; }
+        .training-section .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 32px; }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            height: 250px;
+            padding: 0 20px;
+            gap: 8px;
+        }
+        .timeline-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: end;
+        }
+        .bar-fill {
+            width: 100%;
+            max-width: 80px;
+            border-radius: 8px 8px 0 0;
+            background: linear-gradient(180deg, var(--accent), var(--primary));
+            transition: height 1s ease;
+            position: relative;
+        }
+        .bar-fill.highlight {
+            background: linear-gradient(180deg, #10b981, #059669);
+            box-shadow: 0 0 20px rgba(16,185,129,0.3);
+        }
+        .bar-label {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .bar-value {
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .bar-value.highlight { color: var(--success); }
+        
+        /* Classes Section */
+        .classes-section {
+            padding: 60px 0;
+        }
+        .classes-section h2 { font-size: 2rem; text-align: center; margin-bottom: 32px; }
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .class-card {
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+        .class-emoji { font-size: 3rem; margin-bottom: 12px; }
+        .class-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .class-chinese { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 8px; }
+        .class-share { font-size: 0.85rem; color: var(--accent); }
+        
+        /* Pricing Section */
+        .pricing-section {
+            padding: 60px 0;
+        }
+        .pricing-section h2 { font-size: 2rem; text-align: center; margin-bottom: 32px; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .pricing-card {
+            padding: 32px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.06);
+            text-align: center;
+            position: relative;
+        }
+        .pricing-card.popular {
+            border-color: var(--primary);
+            box-shadow: 0 0 40px rgba(0,102,255,0.15);
+        }
+        .pricing-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .pricing-tier { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+        .pricing-price { font-size: 2.5rem; font-weight: 800; margin-bottom: 4px; }
+        .pricing-period { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 24px; }
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.9rem;
+        }
+        .pricing-features li::before { content: '✓ '; color: var(--success); font-weight: 700; }
+        .pricing-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        .pricing-btn.primary { background: var(--primary); color: #fff; }
+        .pricing-btn.primary:hover { background: var(--primary-dark); }
+        .pricing-btn.outline { background: transparent; color: var(--accent); border: 2px solid var(--accent); }
+        .pricing-btn.outline:hover { background: rgba(0,212,255,0.1); }
+        
+        /* Dataset Section */
+        .dataset-section {
+            padding: 60px 0;
+        }
+        .dataset-section h2 { font-size: 2rem; text-align: center; margin-bottom: 32px; }
+        .dataset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .dataset-card {
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+        .dataset-value { font-size: 2rem; font-weight: 800; color: var(--accent); }
+        .dataset-label { color: var(--text-muted); font-size: 0.9rem; }
+        
+        /* Links Section */
+        .links-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .links-section h2 { font-size: 2rem; margin-bottom: 24px; }
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .link-card {
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        .link-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .link-icon { font-size: 2rem; margin-bottom: 12px; }
+        .link-title { font-weight: 700; margin-bottom: 4px; }
+        .link-desc { color: var(--text-muted); font-size: 0.85rem; }
+        
+        /* Footer */
+        footer {
+            padding: 32px 0;
+            text-align: center;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .demo-grid { grid-template-columns: 1fr; }
+            .class-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .links-grid { grid-template-columns: 1fr; }
+            .dataset-grid { grid-template-columns: 1fr; }
+            .timeline { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <div class="badge">92.45% mAP50 — Production Ready</div>
+        <h1>ValveAI</h1>
+        <p class="subtitle">AI-powered valve detection for underground gas infrastructure inspection. Detect 4 valve types in real-time with state-of-the-art accuracy.</p>
+        <div class="cta-buttons">
+            <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="btn btn-primary" target="_blank">Try Live Demo</a>
+            <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="btn btn-secondary" target="_blank">Get Model</a>
+            <a href="https://github.com/zhuj92405-design/valve-detection-yolov8s2" class="btn btn-secondary" target="_blank">View Source</a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="container">
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">92.45%</div>
+            <div class="stat-label">mAP50 Accuracy</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">9,038</div>
+            <div class="stat-label">Training Images</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">~8ms</div>
+            <div class="stat-label">Inference Speed</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">45,134</div>
+            <div class="stat-label">Bounding Boxes</div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo -->
+<section class="demo-section container">
+    <h2>Real-Time Valve Detection</h2>
+    <div class="demo-grid">
+        <div class="demo-image">
+            <img src="valve_detection_demo.gif" alt="Valve Detection Demo" />
+        </div>
+        <div class="demo-features">
+            <div class="feature-card">
+                <div class="feature-icon">🔬</div>
+                <div>
+                    <div class="feature-title">4 Valve Classes</div>
+                    <div class="feature-desc">Gate valve, Globe valve, Ball valve, and Other valve types — covering all common underground gas infrastructure.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div>
+                    <div class="feature-title">Real-Time Inference</div>
+                    <div class="feature-desc">~8ms per image on CPU, ~3ms on GPU. Process thousands of inspection photos in minutes.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <div>
+                    <div class="feature-title">GPS Integration</div>
+                    <div class="feature-desc">93% of images have GPS coordinates. Generate interactive inspection maps with 650+ geolocated sites.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <div>
+                    <div class="feature-title">Production Ready</div>
+                    <div class="feature-desc">PyTorch, ONNX, TensorRT exports. Docker deployment. REST API endpoint. Ready for integration.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Training Journey -->
+<section class="training-section container">
+    <h2>10 Rounds of Iterative Training</h2>
+    <p class="subtitle">From 30 labeled images to 92.45% accuracy — without paying for annotations</p>
+    <div class="timeline">
+        <div class="timeline-bar">
+            <div class="bar-value">28%</div>
+            <div class="bar-fill" style="height: 15%"></div>
+            <div class="bar-label">R1<br>30 imgs</div>
+        </div>
+        <div class="timeline-bar">
+            <div class="bar-value">66%</div>
+            <div class="bar-fill" style="height: 35%"></div>
+            <div class="bar-label">R4<br>1.6K imgs</div>
+        </div>
+        <div class="timeline-bar">
+            <div class="bar-value">81%</div>
+            <div class="bar-fill" style="height: 55%"></div>
+            <div class="bar-label">R7<br>3.9K imgs</div>
+        </div>
+        <div class="timeline-bar">
+            <div class="bar-value">84%</div>
+            <div class="bar-fill" style="height: 60%"></div>
+            <div class="bar-label">R8<br>8.5K imgs</div>
+        </div>
+        <div class="timeline-bar">
+            <div class="bar-value">81%</div>
+            <div class="bar-fill" style="height: 55%; background: linear-gradient(180deg, #ef4444, #991b1b);"></div>
+            <div class="bar-label">R9<br>18.6K imgs</div>
+        </div>
+        <div class="timeline-bar">
+            <div class="bar-value highlight">92.5%</div>
+            <div class="bar-fill highlight" style="height: 100%"></div>
+            <div class="bar-label">R10<br>9K imgs</div>
+        </div>
+    </div>
+    <p style="text-align:center; color: var(--text-muted); margin-top: 24px; font-size: 0.9rem;">
+        Key Insight: R9 added more data but <strong style="color:#ef4444">hurt performance</strong> due to noisy labels. R10 filtered to high-confidence labels only → <strong style="color:#10b981">+6.9% mAP50 improvement</strong>.
+    </p>
+</section>
+
+<!-- Detection Classes -->
+<section class="classes-section container">
+    <h2>4 Valve Classes</h2>
+    <div class="class-grid">
+        <div class="class-card">
+            <div class="class-emoji">🔧</div>
+            <div class="class-name">Gate Valve</div>
+            <div class="class-chinese">闸阀</div>
+            <div class="class-share">~45% of data</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">🔩</div>
+            <div class="class-name">Globe Valve</div>
+            <div class="class-chinese">截止阀</div>
+            <div class="class-share">~17% of data</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">⚙️</div>
+            <div class="class-name">Ball Valve</div>
+            <div class="class-chinese">球阀</div>
+            <div class="class-share">~34% of data</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">🔵</div>
+            <div class="class-name">Other Valve</div>
+            <div class="class-chinese">其他</div>
+            <div class="class-share">~4% of data</div>
+        </div>
+    </div>
+</section>
+
+<!-- Dataset -->
+<section class="dataset-section container">
+    <h2>Professional Dataset Available</h2>
+    <div class="dataset-grid">
+        <div class="dataset-card">
+            <div class="dataset-value">9,038</div>
+            <div class="dataset-label">Anonymized Images (EXIF stripped)</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">45,134</div>
+            <div class="dataset-label">Bounding Box Annotations</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">1.8 GB</div>
+            <div class="dataset-label">YOLO Format, Ready to Train</div>
+        </div>
+    </div>
+    <div style="text-align:center; margin-top: 24px;">
+        <a href="https://huggingface.co/datasets/lg227210/valve-detection-dataset" class="btn btn-secondary" target="_blank">Browse Dataset on Hugging Face</a>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing-section container">
+    <h2>Licensing & Services</h2>
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <div class="pricing-tier">Model License</div>
+            <div class="pricing-price">$499</div>
+            <div class="pricing-period">one-time</div>
+            <ul class="pricing-features">
+                <li>Pre-trained YOLOv8s weights</li>
+                <li>ONNX export for deployment</li>
+                <li>Python inference script</li>
+                <li>Commercial usage license</li>
+                <li>Documentation & examples</li>
+            </ul>
+            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Model License Inquiry'">Contact Us</button>
+        </div>
+        <div class="pricing-card popular">
+            <div class="pricing-tier">Model + Dataset</div>
+            <div class="pricing-price">$1,499</div>
+            <div class="pricing-period">one-time</div>
+            <ul class="pricing-features">
+                <li>Everything in Model License</li>
+                <li>9,038 annotated images</li>
+                <li>45,134 bounding box labels</li>
+                <li>YOLO format, ready to retrain</li>
+                <li>Class distribution analysis</li>
+                <li>Priority email support</li>
+            </ul>
+            <button class="pricing-btn primary" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Model + Dataset Inquiry'">Contact Us</button>
+        </div>
+        <div class="pricing-card">
+            <div class="pricing-tier">Custom Solution</div>
+            <div class="pricing-price">$3,000+</div>
+            <div class="pricing-period">per project</div>
+            <ul class="pricing-features">
+                <li>Everything in Model + Dataset</li>
+                <li>Custom model for your data</li>
+                <li>Web dashboard & API</li>
+                <li>Interactive inspection map</li>
+                <li>Docker deployment package</li>
+                <li>60-day priority support</li>
+            </ul>
+            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Custom Solution Inquiry'">Contact Us</button>
+        </div>
+    </div>
+</section>
+
+<!-- Links -->
+<section class="links-section container">
+    <h2>Resources</h2>
+    <div class="links-grid">
+        <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="link-card" target="_blank">
+            <div class="link-icon">🤗</div>
+            <div class="link-title">Hugging Face Model</div>
+            <div class="link-desc">Download weights, ONNX, inference code</div>
+        </a>
+        <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="link-card" target="_blank">
+            <div class="link-icon">🎮</div>
+            <div class="link-title">Live Demo</div>
+            <div class="link-desc">Upload your inspection photo, see results</div>
+        </a>
+        <a href="https://dev.to/jins_zhu_10096cef92aba38b/how-we-trained-an-837-map50-valve-detection-model-with-iterative-pseudo-labeling-4lhi" class="link-card" target="_blank">
+            <div class="link-icon">📝</div>
+            <div class="link-title">Technical Blog</div>
+            <div class="link-desc">Full deep-dive into training methodology</div>
+        </a>
+        <a href="https://huggingface.co/datasets/lg227210/valve-detection-dataset" class="link-card" target="_blank">
+            <div class="link-icon">📦</div>
+            <div class="link-title">Dataset</div>
+            <div class="link-desc">9,038 images with 45K annotations</div>
+        </a>
+        <a href="https://github.com/zhuj92405-design/valve-detection-yolov8s2" class="link-card" target="_blank">
+            <div class="link-icon">💻</div>
+            <div class="link-title">GitHub</div>
+            <div class="link-desc">Source code, issues, contributions</div>
+        </a>
+        <a href="mailto:valve-ai@contact.com" class="link-card">
+            <div class="link-icon">📧</div>
+            <div class="link-title">Contact</div>
+            <div class="link-desc">Custom solutions & licensing inquiries</div>
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>ValveAI — AI-Powered Gas Valve Detection | Built with YOLOv8, PyTorch, and Iterative Pseudo-Labeling</p>
+    </div>
+</footer>
+
+</body>
+</html>
