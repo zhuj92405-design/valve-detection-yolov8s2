@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ValveAI — AI-Powered Gas Valve Detection</title>
-    <meta name="description" content="Production-grade YOLOv8s valve detection model with 92.45% mAP50. Detect 4 valve types in underground gas infrastructure inspection photos.">
+    <title>ValveAI — AI-Powered Valve Detection & Anomaly Inspection</title>
+    <meta name="description" content="Production-grade AI pipeline for gas valve inspection: YOLOv8s valve detection (92.95% mAP50) + anomaly detection (corrosion, cracks, water damage, fog). 861K images analyzed.">
     <meta name="keywords" content="AI, valve detection, YOLOv8, industrial inspection, computer vision, gas infrastructure">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -391,9 +391,9 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <div class="badge">92.45% mAP50 — Production Ready</div>
+        <div class="badge">92.95% mAP50 Valve Detection + 6-Class Anomaly Detection</div>
         <h1>ValveAI</h1>
-        <p class="subtitle">AI-powered valve detection for underground gas infrastructure inspection. Detect 4 valve types in real-time with state-of-the-art accuracy.</p>
+        <p class="subtitle">Complete AI pipeline for underground gas valve well inspection. Detect 4 valve types AND identify 6 anomaly classes — corrosion, cracks, water damage, coating damage, and fog — across 861,000+ inspection photos.</p>
         <div class="cta-buttons">
             <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="btn btn-primary" target="_blank">Try Live Demo</a>
             <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="btn btn-secondary" target="_blank">Get Model</a>
@@ -406,16 +406,16 @@
 <section class="container">
     <div class="stats-bar">
         <div class="stat-item">
-            <div class="stat-value">92.45%</div>
-            <div class="stat-label">mAP50 Accuracy</div>
+            <div class="stat-value">92.95%</div>
+            <div class="stat-label">Valve Detection mAP50</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">9,038</div>
-            <div class="stat-label">Training Images</div>
+            <div class="stat-value">861K</div>
+            <div class="stat-label">Images Analyzed</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">~8ms</div>
-            <div class="stat-label">Inference Speed</div>
+            <div class="stat-value">6</div>
+            <div class="stat-label">Anomaly Classes</div>
         </div>
         <div class="stat-item">
             <div class="stat-value">45,134</div>
@@ -467,7 +467,7 @@
 <!-- Training Journey -->
 <section class="training-section container">
     <h2>10 Rounds of Iterative Training</h2>
-    <p class="subtitle">From 30 labeled images to 92.45% accuracy — without paying for annotations</p>
+    <p class="subtitle">From 30 labeled images to 92.95% accuracy — without paying for annotations</p>
     <div class="timeline">
         <div class="timeline-bar">
             <div class="bar-value">28%</div>
@@ -503,6 +503,71 @@
     <p style="text-align:center; color: var(--text-muted); margin-top: 24px; font-size: 0.9rem;">
         Key Insight: R9 added more data but <strong style="color:#ef4444">hurt performance</strong> due to noisy labels. R10 filtered to high-confidence labels only → <strong style="color:#10b981">+6.9% mAP50 improvement</strong>.
     </p>
+</section>
+
+<!-- Anomaly Detection Section -->
+<section class="classes-section container" style="background: linear-gradient(135deg, rgba(0,102,255,0.03), rgba(0,212,255,0.03));">
+    <h2>Anomaly Detection System</h2>
+    <p class="subtitle" style="text-align:center; color: var(--text-muted); margin-bottom: 32px;">AI-powered defect identification across 861,000+ underground valve well inspection photos</p>
+    <div class="class-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 32px;">
+        <div class="class-card">
+            <div class="class-emoji">🦠</div>
+            <div class="class-name">Corrosion & Rust</div>
+            <div class="class-chinese">腐蚀生锈</div>
+            <div class="class-share">76.9% prevalence</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">🎨</div>
+            <div class="class-name">Coating Damage</div>
+            <div class="class-chinese">涂层损坏</div>
+            <div class="class-share">68.5% prevalence</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">📐</div>
+            <div class="class-name">Wall Cracks</div>
+            <div class="class-chinese">墙壁裂缝</div>
+            <div class="class-share">58.8% prevalence</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">💧</div>
+            <div class="class-name">Water Accumulation</div>
+            <div class="class-chinese">积水</div>
+            <div class="class-share">40.7% prevalence</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">🌧️</div>
+            <div class="class-name">Water Seepage</div>
+            <div class="class-chinese">渗水</div>
+            <div class="class-share">44.2% prevalence</div>
+        </div>
+        <div class="class-card">
+            <div class="class-emoji">🌫️</div>
+            <div class="class-name">Fog Condensation</div>
+            <div class="class-chinese">雾气凝结</div>
+            <div class="class-share">10.3% prevalence</div>
+        </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+        <div class="dataset-card">
+            <div class="dataset-value">94.3%</div>
+            <div class="dataset-label">Images with at least one anomaly</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">73.6%</div>
+            <div class="dataset-label">Mild severity (most common)</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">EfficientNet-B0</div>
+            <div class="dataset-label">Multi-label classifier (74% accuracy)</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">YOLOv8s</div>
+            <div class="dataset-label">Bbox detection model (6 classes)</div>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <a href="https://huggingface.co/lg227210/anomaly-detection-yolov8s" class="btn btn-secondary" target="_blank">Get Anomaly Detection Model</a>
+    </div>
 </section>
 
 <!-- Detection Classes -->
@@ -563,45 +628,45 @@
     <h2>Licensing & Services</h2>
     <div class="pricing-grid">
         <div class="pricing-card">
-            <div class="pricing-tier">Model License</div>
+            <div class="pricing-tier">Valve Detection Only</div>
             <div class="pricing-price">$499</div>
             <div class="pricing-period">one-time</div>
             <ul class="pricing-features">
-                <li>Pre-trained YOLOv8s weights</li>
+                <li>YOLOv8s valve detection (92.95% mAP50)</li>
                 <li>ONNX export for deployment</li>
                 <li>Python inference script</li>
                 <li>Commercial usage license</li>
                 <li>Documentation & examples</li>
             </ul>
-            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Model License Inquiry'">Contact Us</button>
+            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Valve Detection License Inquiry'">Contact Us</button>
         </div>
         <div class="pricing-card popular">
-            <div class="pricing-tier">Model + Dataset</div>
+            <div class="pricing-tier">Complete Pipeline</div>
             <div class="pricing-price">$1,499</div>
             <div class="pricing-period">one-time</div>
             <ul class="pricing-features">
-                <li>Everything in Model License</li>
-                <li>9,038 annotated images</li>
-                <li>45,134 bounding box labels</li>
-                <li>YOLO format, ready to retrain</li>
-                <li>Class distribution analysis</li>
+                <li>Valve detection model (92.95% mAP50)</li>
+                <li>Anomaly detection model (6 classes)</li>
+                <li>EfficientNet-B0 classifier (74% accuracy)</li>
+                <li>Combined pipeline script</li>
+                <li>9,038 annotated valve images</li>
                 <li>Priority email support</li>
             </ul>
-            <button class="pricing-btn primary" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Model + Dataset Inquiry'">Contact Us</button>
+            <button class="pricing-btn primary" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Complete Pipeline Inquiry'">Contact Us</button>
         </div>
         <div class="pricing-card">
-            <div class="pricing-tier">Custom Solution</div>
-            <div class="pricing-price">$3,000+</div>
+            <div class="pricing-tier">Enterprise Solution</div>
+            <div class="pricing-price">$2,999+</div>
             <div class="pricing-period">per project</div>
             <ul class="pricing-features">
-                <li>Everything in Model + Dataset</li>
+                <li>Everything in Complete Pipeline</li>
                 <li>Custom model for your data</li>
-                <li>Web dashboard & API</li>
+                <li>Web dashboard & REST API</li>
                 <li>Interactive inspection map</li>
                 <li>Docker deployment package</li>
                 <li>60-day priority support</li>
             </ul>
-            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Custom Solution Inquiry'">Contact Us</button>
+            <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Enterprise Solution Inquiry'">Contact Us</button>
         </div>
     </div>
 </section>
@@ -609,18 +674,23 @@
 <!-- Links -->
 <section class="links-section container">
     <h2>Resources</h2>
-    <div class="links-grid">
+    <div class="links-grid" style="grid-template-columns: repeat(3, 1fr);">
         <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="link-card" target="_blank">
-            <div class="link-icon">🤗</div>
-            <div class="link-title">Hugging Face Model</div>
-            <div class="link-desc">Download weights, ONNX, inference code</div>
+            <div class="link-icon">🔧</div>
+            <div class="link-title">Valve Detection Model</div>
+            <div class="link-desc">YOLOv8s, 92.95% mAP50, ONNX + PyTorch</div>
+        </a>
+        <a href="https://huggingface.co/lg227210/anomaly-detection-yolov8s" class="link-card" target="_blank">
+            <div class="link-icon">⚠️</div>
+            <div class="link-title">Anomaly Detection Model</div>
+            <div class="link-desc">YOLOv8s, 6 defect classes, ONNX + PyTorch</div>
         </a>
         <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="link-card" target="_blank">
             <div class="link-icon">🎮</div>
             <div class="link-title">Live Demo</div>
             <div class="link-desc">Upload your inspection photo, see results</div>
         </a>
-        <a href="https://dev.to/jins_zhu_10096cef92aba38b/how-we-trained-an-837-map50-valve-detection-model-with-iterative-pseudo-labeling-4lhi" class="link-card" target="_blank">
+        <a href="https://dev.to/jins_zhu_10096cef92aba38b/how-we-trained-a-92-95-map50-valve-detection-model-with-iterative-pseudo-labeling-4lhi" class="link-card" target="_blank">
             <div class="link-icon">📝</div>
             <div class="link-title">Technical Blog</div>
             <div class="link-desc">Full deep-dive into training methodology</div>
@@ -633,12 +703,7 @@
         <a href="https://github.com/zhuj92405-design/valve-detection-yolov8s2" class="link-card" target="_blank">
             <div class="link-icon">💻</div>
             <div class="link-title">GitHub</div>
-            <div class="link-desc">Source code, issues, contributions</div>
-        </a>
-        <a href="mailto:valve-ai@contact.com" class="link-card">
-            <div class="link-icon">📧</div>
-            <div class="link-title">Contact</div>
-            <div class="link-desc">Custom solutions & licensing inquiries</div>
+            <div class="link-desc">Source code, pipeline scripts, issues</div>
         </a>
     </div>
 </section>
@@ -646,7 +711,7 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <p>ValveAI — AI-Powered Gas Valve Detection | Built with YOLOv8, PyTorch, and Iterative Pseudo-Labeling</p>
+        <p>ValveAI — Complete AI Pipeline for Gas Valve Well Inspection | Valve Detection + Anomaly Detection | Built with YOLOv8, EfficientNet, and Iterative Pseudo-Labeling</p>
     </div>
 </footer>
 
