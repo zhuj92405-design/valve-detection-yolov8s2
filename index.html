@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ValveAI — AI-Powered Valve Detection & Anomaly Inspection</title>
-    <meta name="description" content="Production-grade AI pipeline for gas valve inspection: YOLOv8s valve detection (92.95% mAP50) + anomaly detection (corrosion, cracks, water damage, fog). 861K images analyzed.">
+    <meta name="description" content="Production-grade AI pipeline for gas valve inspection: YOLOv8s valve detection (92.95% mAP50) + anomaly detection V2 (45.92% mAP50, 6 classes). 861K images analyzed.">
     <meta name="keywords" content="AI, valve detection, YOLOv8, industrial inspection, computer vision, gas infrastructure">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -391,9 +391,9 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <div class="badge">92.95% mAP50 Valve Detection + 6-Class Anomaly Detection</div>
+        <div class="badge">92.95% mAP50 Valve Detection + 45.92% mAP50 Anomaly Detection</div>
         <h1>ValveAI</h1>
-        <p class="subtitle">Complete AI pipeline for underground gas valve well inspection. Detect 4 valve types AND identify 6 anomaly classes — corrosion, cracks, water damage, coating damage, and fog — across 861,000+ inspection photos.</p>
+        <p class="subtitle">Complete AI pipeline for underground gas valve well inspection. Detect 4 valve types AND identify 6 anomaly classes — corrosion, cracks, water damage, coating damage, and fog — across 861,000+ inspection photos. Anomaly detection V2 achieves 45.92% mAP50 (+47.4% over V1).</p>
         <div class="cta-buttons">
             <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="btn btn-primary" target="_blank">Try Live Demo</a>
             <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="btn btn-secondary" target="_blank">Get Model</a>
@@ -514,55 +514,59 @@
             <div class="class-emoji">🦠</div>
             <div class="class-name">Corrosion & Rust</div>
             <div class="class-chinese">腐蚀生锈</div>
-            <div class="class-share">76.9% prevalence</div>
+            <div class="class-share">77.3% prevalence</div>
         </div>
         <div class="class-card">
             <div class="class-emoji">🎨</div>
             <div class="class-name">Coating Damage</div>
             <div class="class-chinese">涂层损坏</div>
-            <div class="class-share">68.5% prevalence</div>
+            <div class="class-share">67.7% prevalence</div>
         </div>
         <div class="class-card">
             <div class="class-emoji">📐</div>
             <div class="class-name">Wall Cracks</div>
             <div class="class-chinese">墙壁裂缝</div>
-            <div class="class-share">58.8% prevalence</div>
+            <div class="class-share">59.6% prevalence</div>
         </div>
         <div class="class-card">
             <div class="class-emoji">💧</div>
             <div class="class-name">Water Accumulation</div>
             <div class="class-chinese">积水</div>
-            <div class="class-share">40.7% prevalence</div>
+            <div class="class-share">44.4% prevalence</div>
         </div>
         <div class="class-card">
             <div class="class-emoji">🌧️</div>
             <div class="class-name">Water Seepage</div>
             <div class="class-chinese">渗水</div>
-            <div class="class-share">44.2% prevalence</div>
+            <div class="class-share">46.1% prevalence</div>
         </div>
         <div class="class-card">
             <div class="class-emoji">🌫️</div>
             <div class="class-name">Fog Condensation</div>
             <div class="class-chinese">雾气凝结</div>
-            <div class="class-share">10.3% prevalence</div>
+            <div class="class-share">11.0% prevalence</div>
         </div>
     </div>
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px;">
         <div class="dataset-card">
-            <div class="dataset-value">94.3%</div>
-            <div class="dataset-label">Images with at least one anomaly</div>
+            <div class="dataset-value">94.5%</div>
+            <div class="dataset-label">Images with anomaly</div>
         </div>
         <div class="dataset-card">
-            <div class="dataset-value">73.6%</div>
-            <div class="dataset-label">Mild severity (most common)</div>
+            <div class="dataset-value">68.3%</div>
+            <div class="dataset-label">Mild severity</div>
+        </div>
+        <div class="dataset-card">
+            <div class="dataset-value">45.92%</div>
+            <div class="dataset-label">Anomaly mAP50 (V2)</div>
         </div>
         <div class="dataset-card">
             <div class="dataset-value">EfficientNet-B0</div>
-            <div class="dataset-label">Multi-label classifier (74% accuracy)</div>
+            <div class="dataset-label">Classifier (74% accuracy)</div>
         </div>
         <div class="dataset-card">
-            <div class="dataset-value">YOLOv8s</div>
-            <div class="dataset-label">Bbox detection model (6 classes)</div>
+            <div class="dataset-value">YOLOv8s V2</div>
+            <div class="dataset-label">Bbox detection (+47.4% vs V1)</div>
         </div>
     </div>
     <div style="text-align:center;">
@@ -646,7 +650,7 @@
             <div class="pricing-period">one-time</div>
             <ul class="pricing-features">
                 <li>Valve detection model (92.95% mAP50)</li>
-                <li>Anomaly detection model (6 classes)</li>
+                <li>Anomaly detection model V2 (45.92% mAP50, 6 classes)</li>
                 <li>EfficientNet-B0 classifier (74% accuracy)</li>
                 <li>Combined pipeline script</li>
                 <li>9,038 annotated valve images</li>
@@ -683,7 +687,7 @@
         <a href="https://huggingface.co/lg227210/anomaly-detection-yolov8s" class="link-card" target="_blank">
             <div class="link-icon">⚠️</div>
             <div class="link-title">Anomaly Detection Model</div>
-            <div class="link-desc">YOLOv8s, 6 defect classes, ONNX + PyTorch</div>
+            <div class="link-desc">YOLOv8s V2, 45.92% mAP50, 6 defect classes, ONNX + PyTorch</div>
         </a>
         <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="link-card" target="_blank">
             <div class="link-icon">🎮</div>
@@ -711,7 +715,7 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <p>ValveAI — Complete AI Pipeline for Gas Valve Well Inspection | Valve Detection + Anomaly Detection | Built with YOLOv8, EfficientNet, and Iterative Pseudo-Labeling</p>
+        <p>ValveAI — Complete AI Pipeline for Gas Valve Well Inspection | Valve Detection (92.95% mAP50) + Anomaly Detection V2 (45.92% mAP50) | Built with YOLOv8, EfficientNet, and Iterative Pseudo-Labeling</p>
     </div>
 </footer>
 
