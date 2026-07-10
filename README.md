@@ -107,11 +107,92 @@ This model was trained using an **iterative pseudo-labeling** pipeline:
 
 Key finding: Removing 50% of noisy pseudo-labels (filtering from 18K to 9K images) improved mAP50 by 11.2 percentage points over R9.
 
+## Anomaly Detection
+
+In addition to valve localization, this repository now includes an **anomaly detection model** that identifies structural and environmental anomalies inside gas valve wells.
+
+**Model Performance**: mAP50 = 31.2% | mAP50-95 = 19.4% | 6 anomaly classes
+
+### Anomaly Classes
+
+| Class ID | Name | Chinese | Severity | Typical Indicator |
+|----------|------|---------|----------|-------------------|
+| 0 | Water Accumulation | 积水 | Medium | Standing water at well bottom |
+| 1 | Water Seepage | 渗水 | High | Active water infiltration |
+| 2 | Corrosion / Rust | 腐蚀生锈 | High | Metal surface degradation |
+| 3 | Coating Damage | 涂层损坏 | Medium | Protective coating peeling |
+| 4 | Wall Crack | 墙体裂缝 | Critical | Structural crack in well wall |
+| 5 | Fog / Condensation | 雾气结露 | Low | Vapor or condensation on lens/surface |
+
+### Quick Start — Anomaly Detection
+
+```bash
+pip install ultralytics opencv-python pillow
+```
+
+```python
+from ultralytics import YOLO
+
+model = YOLO("anomaly_best.pt")
+results = model.predict(source="well_inspection.jpg", conf=0.3)
+
+for r in results:
+    for box in r.boxes:
+        cls = int(box.cls[0])
+        conf = float(box.conf[0])
+        x1, y1, x2, y2 = box.xyxy[0].tolist()
+        print(f"Anomaly: {model.names[cls]}, Confidence: {conf:.2f}, BBox: [{x1:.0f},{y1:.0f},{x2:.0f},{y2:.0f}]")
+```
+
+### Combined Pipeline — Valve + Anomaly Detection
+
+Run both models in sequence for a complete inspection report:
+
+```bash
+python combined_pipeline.py --source ./inspection_photos/ --output ./pipeline_results/
+```
+
+This first detects valves, then scans the same images for anomalies, producing a unified report.
+
+### Training Details
+
+| Metric | Value |
+|--------|-------|
+| Training images | 213 (173 train / 40 val) |
+| Total bounding boxes | 505 |
+| Best epoch | 33 (early stopped at 64) |
+| Optimizer | AdamW, lr=0.001 |
+| mAP50 | 31.15% |
+| mAP50-95 | 19.38% |
+
+**Per-class performance**:
+
+| Class | mAP50 | Notes |
+|-------|-------|-------|
+| Wall Crack | 65.0% | Most distinctive visual pattern |
+| Water Accumulation | 57.7% | Large regions, consistent appearance |
+| Corrosion / Rust | 22.3% | Variable appearance |
+| Fog / Condensation | 20.2% | Diffuse, low-contrast |
+| Water Seepage | 14.0% | Hard to distinguish from accumulation |
+| Coating Damage | 0.7% | Needs more training data |
+
+### EfficientNet-B0 Anomaly Classifier
+
+A complementary **image-level classifier** (EfficientNet-B0) is also available:
+
+| Metric | Value |
+|--------|-------|
+| Anomaly type accuracy | 74.0% |
+| Severity classification accuracy | 78.8% |
+| Input | Full image (no cropping needed) |
+| Output | 6 anomaly types + 4 severity levels |
+
 ## Resources
 
 | Resource | Link |
 |----------|------|
-| **Model Weights** | [HuggingFace](https://huggingface.co/lg227210/valve-detection-yolov8s) |
+| **Valve Detection Model** | [HuggingFace](https://huggingface.co/lg227210/valve-detection-yolov8s) |
+| **Anomaly Detection Model** | [HuggingFace](https://huggingface.co/lg227210/anomaly-detection-yolov8s) |
 | **Live Demo** | [HuggingFace Spaces](https://huggingface.co/spaces/lg227210/valve-detection-demo) |
 | **Dataset** | [HuggingFace Datasets](https://huggingface.co/datasets/lg227210/valve-detection-dataset) |
 | **Technical Whitepaper** | [PDF](https://huggingface.co/lg227210/valve-detection-yolov8s/blob/main/ValveAI_Technical_Whitepaper.pdf) |
