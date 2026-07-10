@@ -4,7 +4,7 @@ Combined Pipeline — Valve Detection + Anomaly Detection
 
 Runs both models sequentially on inspection photos:
   1. YOLOv8s valve detection (4 classes, mAP50=92.95%)
-  2. YOLOv8s anomaly detection (6 classes, mAP50=31.2%)
+  2. YOLOv8s anomaly detection (6 classes, mAP50=45.92%)
 
 Outputs a unified inspection report.
 

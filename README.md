@@ -111,18 +111,18 @@ Key finding: Removing 50% of noisy pseudo-labels (filtering from 18K to 9K image
 
 In addition to valve localization, this repository now includes an **anomaly detection model** that identifies structural and environmental anomalies inside gas valve wells.
 
-**Model Performance**: mAP50 = 31.2% | mAP50-95 = 19.4% | 6 anomaly classes
+**Model Performance (V2)**: mAP50 = 45.92% | mAP50-95 = 29.00% | 6 anomaly classes | +47.4% over V1
 
 ### Anomaly Classes
 
-| Class ID | Name | Chinese | Severity | Typical Indicator |
-|----------|------|---------|----------|-------------------|
-| 0 | Water Accumulation | 积水 | Medium | Standing water at well bottom |
-| 1 | Water Seepage | 渗水 | High | Active water infiltration |
-| 2 | Corrosion / Rust | 腐蚀生锈 | High | Metal surface degradation |
-| 3 | Coating Damage | 涂层损坏 | Medium | Protective coating peeling |
-| 4 | Wall Crack | 墙体裂缝 | Critical | Structural crack in well wall |
-| 5 | Fog / Condensation | 雾气结露 | Low | Vapor or condensation on lens/surface |
+| Class ID | Name | Chinese | Severity | Prevalence (861K images) |
+|----------|------|---------|----------|--------------------------|
+| 0 | Water Accumulation | 积水 | Medium | 44.4% |
+| 1 | Water Seepage | 渗水 | High | 46.1% |
+| 2 | Corrosion / Rust | 腐蚀生锈 | High | 77.3% |
+| 3 | Coating Damage | 涂层损坏 | Medium | 67.7% |
+| 4 | Wall Crack | 墙体裂缝 | Critical | 59.6% |
+| 5 | Fog / Condensation | 雾气结露 | Low | 11.0% |
 
 ### Quick Start — Anomaly Detection
 
@@ -133,7 +133,7 @@ pip install ultralytics opencv-python pillow
 ```python
 from ultralytics import YOLO
 
-model = YOLO("anomaly_best.pt")
+model = YOLO("anomaly_best_v2.pt")
 results = model.predict(source="well_inspection.jpg", conf=0.3)
 
 for r in results:
@@ -156,25 +156,20 @@ This first detects valves, then scans the same images for anomalies, producing a
 
 ### Training Details
 
-| Metric | Value |
-|--------|-------|
-| Training images | 213 (173 train / 40 val) |
-| Total bounding boxes | 505 |
-| Best epoch | 33 (early stopped at 64) |
-| Optimizer | AdamW, lr=0.001 |
-| mAP50 | 31.15% |
-| mAP50-95 | 19.38% |
+| Metric | V1 | V2 | Change |
+|--------|----|----|--------|
+| Training images | 213 | 512 | +140% |
+| Total bounding boxes | 505 | 1,181 | +134% |
+| Best epoch | 33 | 73 | — |
+| Early stopped at | 64 | 110 | — |
+| mAP50 | 31.15% | **45.92%** | **+47.4%** |
+| mAP50-95 | 19.38% | **29.00%** | **+49.7%** |
+| Precision | — | 54.09% | — |
+| Recall | — | 42.27% | — |
+| Optimizer | AdamW | AdamW | — |
+| Patience | 30 | 40 | — |
 
-**Per-class performance**:
-
-| Class | mAP50 | Notes |
-|-------|-------|-------|
-| Wall Crack | 65.0% | Most distinctive visual pattern |
-| Water Accumulation | 57.7% | Large regions, consistent appearance |
-| Corrosion / Rust | 22.3% | Variable appearance |
-| Fog / Condensation | 20.2% | Diffuse, low-contrast |
-| Water Seepage | 14.0% | Hard to distinguish from accumulation |
-| Coating Damage | 0.7% | Needs more training data |
+**Key V2 improvements**: Doubled the VLM-annotated dataset (213→512), increased patience (30→40), added close_mosaic=15, raised cls weight (0.5→0.8) for class imbalance, increased copy_paste (0.1→0.15).
 
 ### EfficientNet-B0 Anomaly Classifier
 
@@ -186,6 +181,23 @@ A complementary **image-level classifier** (EfficientNet-B0) is also available:
 | Severity classification accuracy | 78.8% |
 | Input | Full image (no cropping needed) |
 | Output | 6 anomaly types + 4 severity levels |
+| Training data | 510 VLM-annotated images |
+| Full inference | 861,367 images (100% complete) |
+
+### Dataset Statistics (861,367 images)
+
+| Stat | Value |
+|------|-------|
+| Images with at least one anomaly | 94.5% |
+| Corrosion / Rust prevalence | 77.3% |
+| Coating Damage prevalence | 67.7% |
+| Wall Crack prevalence | 59.6% |
+| Water Seepage prevalence | 46.1% |
+| Water Accumulation prevalence | 44.4% |
+| Fog Condensation prevalence | 11.0% |
+| Mild severity | 68.3% |
+| Moderate severity | 26.2% |
+| Severe severity | 1.1% |
 
 ## Resources
 
