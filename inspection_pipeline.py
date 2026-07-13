@@ -3,7 +3,7 @@
 Gas Valve Well Inspection Pipeline - End-to-End
 Combines 3 AI models for complete inspection analysis:
 1. Valve Detection (YOLOv8s, mAP50=92.95%) - Detect valve types
-2. Anomaly Detection (YOLOv8s, mAP50=48.2%) - Localize anomaly regions  
+2. Anomaly Detection (YOLOv8s-V6, mAP50=55.71%) - Localize anomaly regions  
 3. Anomaly Classification (EfficientNet-B0, 74.0%) - Classify anomalies + severity
 
 Output: Comprehensive inspection report with overall health score
@@ -25,7 +25,7 @@ from ultralytics import YOLO
 # ===== Configuration =====
 
 VALVE_MODEL_PATH = "valve_detection_best.pt"
-ANOMALY_DET_MODEL_PATH = "anomaly_detection_best.pt"
+ANOMALY_DET_MODEL_PATH = "anomaly_detection_best_v6.pt"
 ANOMALY_CLS_MODEL_PATH = "best_anomaly_classifier.pt"
 
 VALVE_CLASSES = ['gate_valve', 'globe_valve', 'ball_valve', 'other_valve']

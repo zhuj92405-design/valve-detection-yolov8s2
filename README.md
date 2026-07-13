@@ -111,7 +111,7 @@ Key finding: Removing 50% of noisy pseudo-labels (filtering from 18K to 9K image
 
 In addition to valve localization, this repository now includes an **anomaly detection model** that identifies structural and environmental anomalies inside gas valve wells.
 
-**Model Performance (V2)**: mAP50 = 45.92% | mAP50-95 = 29.00% | 6 anomaly classes | +47.4% over V1
+**Model Performance (V6)**: mAP50 = 55.71% | mAP50-95 = 37.56% | 6 anomaly classes | +21.2% over V2
 
 ### Anomaly Classes
 
@@ -133,7 +133,7 @@ pip install ultralytics opencv-python pillow
 ```python
 from ultralytics import YOLO
 
-model = YOLO("anomaly_best_v2.pt")
+model = YOLO("anomaly_detection_best_v6.pt")
 results = model.predict(source="well_inspection.jpg", conf=0.3)
 
 for r in results:
@@ -156,20 +156,20 @@ This first detects valves, then scans the same images for anomalies, producing a
 
 ### Training Details
 
-| Metric | V1 | V2 | Change |
-|--------|----|----|--------|
-| Training images | 213 | 512 | +140% |
-| Total bounding boxes | 505 | 1,181 | +134% |
-| Best epoch | 33 | 73 | — |
-| Early stopped at | 64 | 110 | — |
-| mAP50 | 31.15% | **45.92%** | **+47.4%** |
-| mAP50-95 | 19.38% | **29.00%** | **+49.7%** |
-| Precision | — | 54.09% | — |
-| Recall | — | 42.27% | — |
-| Optimizer | AdamW | AdamW | — |
-| Patience | 30 | 40 | — |
+| Metric | V1 | V2 | V6 | Change (V6 vs V2) |
+|--------|----|----|----|-------------------|
+| Training images | 213 | 512 | 5,954 | +1064% |
+| Total bounding boxes | 505 | 1,181 | 11,543 | +877% |
+| Best epoch | 33 | 73 | 48 | — |
+| Early stopped at | 64 | 110 | 78 | — |
+| mAP50 | 31.15% | 45.92% | **55.71%** | **+21.2%** |
+| mAP50-95 | 19.38% | 29.00% | **37.56%** | **+29.5%** |
+| Precision | — | 54.09% | 60.12% | +11.1% |
+| Recall | — | 42.27% | 52.84% | +25.0% |
+| Optimizer | AdamW | AdamW | AdamW | — |
+| Patience | 30 | 40 | 50 | — |
 
-**Key V2 improvements**: Doubled the VLM-annotated dataset (213→512), increased patience (30→40), added close_mosaic=15, raised cls weight (0.5→0.8) for class imbalance, increased copy_paste (0.1→0.15).
+**Key V6 improvements**: Expanded dataset with V4 pseudo-labels (512→5,954 images, +1064%), integrated 1,301 VLM-annotated images for label quality, increased patience (40→50), larger training set with pseudo-labeling pipeline for robust anomaly detection.
 
 ### EfficientNet-B0 Anomaly Classifier
 
