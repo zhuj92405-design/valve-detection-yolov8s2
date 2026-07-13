@@ -391,9 +391,9 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <div class="badge">92.95% mAP50 Valve Detection + 45.92% mAP50 Anomaly Detection</div>
+        <div class="badge">92.95% mAP50 Valve Detection + 48.2% mAP50 Anomaly Detection</div>
         <h1>ValveAI</h1>
-        <p class="subtitle">Complete AI pipeline for underground gas valve well inspection. Detect 4 valve types AND identify 6 anomaly classes — corrosion, cracks, water damage, coating damage, and fog — across 861,000+ inspection photos. Anomaly detection V2 achieves 45.92% mAP50 (+47.4% over V1).</p>
+        <p class="subtitle">End-to-end AI inspection pipeline for underground gas valve wells. Detect 4 valve types, identify 6 anomaly classes (corrosion, cracks, water damage, coating damage, fog), and generate health scores — across 861,000+ inspection photos. Available in PyTorch, ONNX, CoreML, and TorchScript formats.</p>
         <div class="cta-buttons">
             <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="btn btn-primary" target="_blank">Try Live Demo</a>
             <a href="https://huggingface.co/lg227210/valve-detection-yolov8s" class="btn btn-secondary" target="_blank">Get Model</a>
@@ -418,8 +418,12 @@
             <div class="stat-label">Anomaly Classes</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">45,134</div>
-            <div class="stat-label">Bounding Boxes</div>
+            <div class="stat-value">48.2%</div>
+            <div class="stat-label">Anomaly Detection mAP50</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Model Formats</div>
         </div>
     </div>
 </section>
@@ -457,9 +461,37 @@
                 <div class="feature-icon">🔧</div>
                 <div>
                     <div class="feature-title">Production Ready</div>
-                    <div class="feature-desc">PyTorch, ONNX, TensorRT exports. Docker deployment. REST API endpoint. Ready for integration.</div>
+                    <div class="feature-desc">PyTorch, ONNX, CoreML, TorchScript exports. Edge deployment ready. REST API endpoint. Ready for integration.</div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Inspection Pipeline -->
+<section class="container" style="padding: 40px 0;">
+    <h2 style="text-align: center; margin-bottom: 12px;">End-to-End Inspection Pipeline</h2>
+    <p class="subtitle" style="text-align: center; margin-bottom: 30px;">3 AI models working together: valve detection + anomaly detection + anomaly classification = health score</p>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;">
+        <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px;">1</div>
+            <div style="color: var(--accent); font-weight: 600; margin-bottom: 4px;">Valve Detection</div>
+            <div style="color: var(--text-muted); font-size: 14px;">YOLOv8s<br>92.95% mAP50<br>4 valve types</div>
+        </div>
+        <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px;">2</div>
+            <div style="color: var(--accent); font-weight: 600; margin-bottom: 4px;">Anomaly Detection</div>
+            <div style="color: var(--text-muted); font-size: 14px;">YOLOv8s<br>48.2% mAP50<br>6 anomaly bboxes</div>
+        </div>
+        <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px;">3</div>
+            <div style="color: var(--accent); font-weight: 600; margin-bottom: 4px;">Anomaly Classification</div>
+            <div style="color: var(--text-muted); font-size: 14px;">EfficientNet-B0<br>74.0% accuracy<br>severity levels</div>
+        </div>
+        <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(0,212,255,0.3);">
+            <div style="font-size: 32px; margin-bottom: 8px;">=</div>
+            <div style="color: var(--success); font-weight: 600; margin-bottom: 4px;">Health Score</div>
+            <div style="color: var(--text-muted); font-size: 14px;">0-100 score<br>GOOD / FAIR / POOR / CRITICAL<br>inspection report</div>
         </div>
     </div>
 </section>
@@ -650,10 +682,11 @@
             <div class="pricing-period">one-time</div>
             <ul class="pricing-features">
                 <li>Valve detection model (92.95% mAP50)</li>
-                <li>Anomaly detection model V2 (45.92% mAP50, 6 classes)</li>
+                <li>Anomaly detection model V2 (48.2% mAP50, 6 classes)</li>
                 <li>EfficientNet-B0 classifier (74% accuracy)</li>
-                <li>Combined pipeline script</li>
-                <li>9,038 annotated valve images</li>
+                <li>Inspection pipeline with health scoring</li>
+                <li>PyTorch + ONNX + CoreML + TorchScript</li>
+                <li>1,003 annotated anomaly images</li>
                 <li>Priority email support</li>
             </ul>
             <button class="pricing-btn primary" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Complete Pipeline Inquiry'">Contact Us</button>
@@ -667,7 +700,7 @@
                 <li>Custom model for your data</li>
                 <li>Web dashboard & REST API</li>
                 <li>Interactive inspection map</li>
-                <li>Docker deployment package</li>
+                <li>Edge deployment support (CoreML/TorchScript)</li>
                 <li>60-day priority support</li>
             </ul>
             <button class="pricing-btn outline" onclick="window.location.href='mailto:valve-ai@contact.com?subject=Enterprise Solution Inquiry'">Contact Us</button>
@@ -687,7 +720,7 @@
         <a href="https://huggingface.co/lg227210/anomaly-detection-yolov8s" class="link-card" target="_blank">
             <div class="link-icon">⚠️</div>
             <div class="link-title">Anomaly Detection Model</div>
-            <div class="link-desc">YOLOv8s V2, 45.92% mAP50, 6 defect classes, ONNX + PyTorch</div>
+            <div class="link-desc">YOLOv8s V2, 48.2% mAP50, 6 defect classes, ONNX + PyTorch + CoreML + TorchScript</div>
         </a>
         <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="link-card" target="_blank">
             <div class="link-icon">🎮</div>
