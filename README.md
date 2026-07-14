@@ -111,7 +111,7 @@ Key finding: Removing 50% of noisy pseudo-labels (filtering from 18K to 9K image
 
 In addition to valve localization, this repository now includes an **anomaly detection model** that identifies structural and environmental anomalies inside gas valve wells.
 
-**Model Performance (V6)**: mAP50 = 55.71% | mAP50-95 = 37.56% | 6 anomaly classes | +21.2% over V2
+**Model Performance (V9)**: mAP50 = 63.72% | mAP50-95 = 43.11% | 6 anomaly classes | +32.1% over V2s baseline
 
 ### Anomaly Classes
 
@@ -133,7 +133,7 @@ pip install ultralytics opencv-python pillow
 ```python
 from ultralytics import YOLO
 
-model = YOLO("anomaly_detection_best_v6.pt")
+model = YOLO("anomaly_detection_best_v9.pt")
 results = model.predict(source="well_inspection.jpg", conf=0.3)
 
 for r in results:
@@ -156,20 +156,26 @@ This first detects valves, then scans the same images for anomalies, producing a
 
 ### Training Details
 
-| Metric | V1 | V2 | V6 | Change (V6 vs V2) |
-|--------|----|----|----|-------------------|
-| Training images | 213 | 512 | 5,954 | +1064% |
-| Total bounding boxes | 505 | 1,181 | 11,543 | +877% |
-| Best epoch | 33 | 73 | 48 | — |
-| Early stopped at | 64 | 110 | 78 | — |
-| mAP50 | 31.15% | 45.92% | **55.71%** | **+21.2%** |
-| mAP50-95 | 19.38% | 29.00% | **37.56%** | **+29.5%** |
-| Precision | — | 54.09% | 60.12% | +11.1% |
-| Recall | — | 42.27% | 52.84% | +25.0% |
-| Optimizer | AdamW | AdamW | AdamW | — |
-| Patience | 30 | 40 | 50 | — |
+| Metric | V2s | V6 | V7 | V8 | **V9** |
+|--------|-----|----|----|----|--------|
+| Training images | 512 | 1,062 | 2,779 | 1,464 | 1,463 |
+| Data source | VLM | VLM | VLM+pseudo | VLM | VLM |
+| Fine-tuned from | yolov8s.pt | V2s | V6 | V6 | V8 |
+| mAP50 (V2s val) | 48.2% | 55.71% | 56.0% | 60.51% | **63.72%** |
+| Best epoch | — | 48 | 3 | 4 | 11 |
 
-**Key V6 improvements**: Expanded dataset with V4 pseudo-labels (512→5,954 images, +1064%), integrated 1,301 VLM-annotated images for label quality, increased patience (40→50), larger training set with pseudo-labeling pipeline for robust anomaly detection.
+**Key breakthrough**: Iterative fine-tuning from the previous best model on expanded VLM-only data (no pseudo-labels) consistently yields major gains. V6→V8 (+8.6%), V8→V9 (+5.3%). Pseudo-label path (V7) failed to improve over V6.
+
+### Per-class Performance (V9 on V2s val set)
+
+| Class | mAP50 | Notes |
+|-------|-------|-------|
+| Water Accumulation | 83.7% | Strong |
+| Water Seepage | 54.8% | Improved from V6 (43.3%) |
+| Corrosion / Rust | 61.4% | Improved from V6 (54.0%) |
+| Coating Damage | 36.3% | Weakest class, needs more data |
+| Wall Crack | 69.5% | Improved from V6 (60.1%) |
+| Fog / Condensation | 76.8% | Improved from V6 (67.3%) |
 
 ### EfficientNet-B0 Anomaly Classifier
 
