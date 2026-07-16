@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ValveAI — AI-Powered Valve Detection & Anomaly Inspection</title>
-    <meta name="description" content="Production-grade AI pipeline for gas valve inspection: YOLOv8s valve detection (92.95% mAP50) + anomaly detection V11 (65.72% mAP50, 6 classes). 861K images analyzed.">
+    <meta name="description" content="Production-grade AI pipeline for gas valve inspection: YOLOv8s valve detection (92.95% mAP50) + anomaly detection V13 (73.06% mAP50, 6 classes). 861K images analyzed.">
     <meta name="keywords" content="AI, valve detection, YOLOv8, industrial inspection, computer vision, gas infrastructure">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -391,7 +391,7 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <div class="badge">92.95% mAP50 Valve Detection + 65.72% mAP50 Anomaly Detection</div>
+        <div class="badge">92.95% mAP50 Valve Detection + 73.06% mAP50 Anomaly Detection</div>
         <h1>ValveAI</h1>
         <p class="subtitle">End-to-end AI inspection pipeline for underground gas valve wells. Detect 4 valve types, identify 6 anomaly classes (corrosion, cracks, water damage, coating damage, fog), and generate health scores — across 861,000+ inspection photos. Available in PyTorch, ONNX, CoreML, and TorchScript formats.</p>
         <div class="cta-buttons">
@@ -418,8 +418,8 @@
             <div class="stat-label">Anomaly Classes</div>
         </div>
         <div class="stat-item">
-            <div class="stat-value">65.72%</div>
-            <div class="stat-label">Anomaly Detection mAP50 (V11)</div>
+            <div class="stat-value">73.06%</div>
+            <div class="stat-label">Anomaly Detection mAP50 (V13)</div>
         </div>
         <div class="stat-item">
             <div class="stat-value">4</div>
@@ -481,7 +481,7 @@
         <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
             <div style="font-size: 32px; margin-bottom: 8px;">2</div>
             <div style="color: var(--accent); font-weight: 600; margin-bottom: 4px;">Anomaly Detection</div>
-            <div style="color: var(--text-muted); font-size: 14px;">YOLOv8s<br>65.72% mAP50<br>6 anomaly bboxes</div>
+            <div style="color: var(--text-muted); font-size: 14px;">YOLOv8s<br>73.06% mAP50<br>6 anomaly bboxes</div>
         </div>
         <div style="background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
             <div style="font-size: 32px; margin-bottom: 8px;">3</div>
@@ -589,15 +589,15 @@
             <div class="dataset-label">Mild severity</div>
         </div>
         <div class="dataset-card">
-            <div class="dataset-value">65.72%</div>
-            <div class="dataset-label">Anomaly mAP50 (V11)</div>
+            <div class="dataset-value">73.06%</div>
+            <div class="dataset-label">Anomaly mAP50 (V13)</div>
         </div>
         <div class="dataset-card">
             <div class="dataset-value">EfficientNet-B0</div>
             <div class="dataset-label">Classifier (74% accuracy)</div>
         </div>
         <div class="dataset-card">
-            <div class="dataset-value">YOLOv8s V11</div>
+            <div class="dataset-value">YOLOv8s V13</div>
             <div class="dataset-label">Bbox detection (+15.5% vs V2s)</div>
         </div>
     </div>
@@ -682,7 +682,7 @@
             <div class="pricing-period">one-time</div>
             <ul class="pricing-features">
                 <li>Valve detection model (92.95% mAP50)</li>
-                <li>Anomaly detection model V11 (65.72% mAP50, 6 classes)</li>
+                <li>Anomaly detection model V13 (73.06% mAP50, 6 classes)</li>
                 <li>EfficientNet-B0 classifier (74% accuracy)</li>
                 <li>Inspection pipeline with health scoring</li>
                 <li>PyTorch + ONNX + CoreML + TorchScript</li>
@@ -720,7 +720,7 @@
         <a href="https://huggingface.co/lg227210/anomaly-detection-yolov8s" class="link-card" target="_blank">
             <div class="link-icon">⚠️</div>
             <div class="link-title">Anomaly Detection Model</div>
-            <div class="link-desc">YOLOv8s V11, 65.72% mAP50, 6 defect classes, ONNX + PyTorch + TorchScript</div>
+            <div class="link-desc">YOLOv8s V13, 73.06% mAP50, 6 defect classes, ONNX + PyTorch + TorchScript</div>
         </a>
         <a href="https://huggingface.co/spaces/lg227210/valve-detection-demo" class="link-card" target="_blank">
             <div class="link-icon">🎮</div>
@@ -748,7 +748,7 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <p>ValveAI — Complete AI Pipeline for Gas Valve Well Inspection | Valve Detection (92.95% mAP50) + Anomaly Detection V11 (65.72% mAP50) | Built with YOLOv8, EfficientNet, and VLM Annotation</p>
+        <p>ValveAI — Complete AI Pipeline for Gas Valve Well Inspection | Valve Detection (92.95% mAP50) + Anomaly Detection V13 (73.06% mAP50) | Built with YOLOv8, EfficientNet, and VLM Annotation</p>
     </div>
 </footer>
 
